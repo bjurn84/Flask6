@@ -5,13 +5,11 @@ from sqlalchemy.orm import sessionmaker, Session
 from databases import Database
 from models import User, Order, Product
 
-# Подключение к базе данных
 DATABASE_URL = "sqlite:///./test.db"
 database = Database(DATABASE_URL)
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Создание таблиц
 Base = declarative_base()
 
 class UserModel(Base):
@@ -41,7 +39,6 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# CRUD операции для пользователей
 @app.post("/users/", response_model=User)
 async def create_user(user: User):
     query = UserModel.__table__.insert().values(**user.dict())
@@ -56,7 +53,6 @@ async def read_user(user_id: int):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-# Аналогичные CRUD операции для заказов и товаров
 
 if __name__ == "__main__":
     import uvicorn
